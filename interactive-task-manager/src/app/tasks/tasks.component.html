@@ -1,5 +1,5 @@
 @if(isAddingTask){
-    <app-new-task [userId] = "userId" (close)="onCloseAddTask()"/>
+    <app-new-task [userId] = "userId" [task] = "selectedTaskForEdit" (close)="onCloseAddTask()"/>
 }
 
 <section id="tasks">
@@ -8,13 +8,18 @@
         <menu>
             <button (click)="onStartAddTask()">Add Task</button>
         </menu>
-
+        <select [(ngModel)]="filter">
+            <option value="all">All</option>
+            <option value="pending">Pending</option>
+            <option value="completed">Completed</option>
+        </select>
     </header>
 
     <ul>
-        @for (task of selectedUserTasks; track task.id){
+        @for (task of filteredTasks; track task.id + '_' + $index){
             <li>
-                <app-task [task]="task"/>
+                <app-task [task]="task"
+                (edit)="onEditTask($event)"/>
             </li>
         }
     </ul>

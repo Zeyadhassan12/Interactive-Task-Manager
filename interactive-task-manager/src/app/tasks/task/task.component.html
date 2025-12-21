@@ -1,10 +1,37 @@
-<app-card>
+<!-- <app-card>
     <article>
+        <div class="status" [class.completed]="task.completed" (click)="onToggleComplete()"></div>
         <h2>{{task.title}}</h2>
         <time>{{task.dueDate | date: 'fullDate'}}</time>
         <p>{{task.summary}}</p>
         <p class="actions">
-            <button (click)="onCompleteTask()">complete</button>
+            
+             <button (click)="onDeleteTask()">Delete</button>
         </p>
     </article>
+</app-card> -->
+
+
+<app-card>
+  <article class="task-article">
+    <!-- Status circle in top-right corner -->
+    <div class="status" [class.completed]="task.completed"></div>
+    
+    <h2>{{ task.title }}</h2>
+    <time>{{ task.dueDate | date: 'fullDate' }}</time>
+    <p>{{ task.summary }}</p>
+    
+    <p class="actions">
+      <button 
+        class="complete-btn" 
+        (click)="onToggleComplete()"
+        [class.completed]="task.completed">
+        {{ task.completed ? 'Completed' : 'Complete' }}
+      </button>
+      <button class="edit-btn" (click)="onEditTask()">Edit</button>
+      <button class="delete-btn" (click)="onDeleteTask()">
+        Delete
+      </button>
+    </p>
+  </article>
 </app-card>

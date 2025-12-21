@@ -1,4 +1,4 @@
-.backdrop {
+/* .backdrop {
   background-color: rgba(0, 0, 0, 0.9);
   position: fixed;
   top: 0;
@@ -76,6 +76,107 @@ button[type="submit"]:hover,
 button[type="submit"]:active {
   background-color: #895cce;
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+}
+
+@media (min-width: 768px) {
+  dialog {
+    padding: 2rem;
+  }
+} */
+
+
+
+.backdrop {
+  background-color: rgba(0, 0, 0, 0.75);   /* Slightly lighter for better look */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 100;                           /* ← ADD: Ensures backdrop is on top */
+}
+
+dialog {
+  position: fixed;                        /* ← CHANGE from relative/top to fixed */
+  top: 50%;                               /* ← Center vertically */
+  left: 50%;                              /* ← Center horizontally */
+  transform: translate(-50%, -50%);        /* ← Perfect centering */
+  width: 90%;
+  max-width: 30rem;
+  background-color: #433352;
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+  padding: 1.5rem;
+  margin: 0;                              /* ← Important for fixed positioning */
+  z-index: 200;                           /* ← ADD: Brings dialog above everything */
+}
+
+h2 {
+  margin: 0 0 1.5rem 0;
+  color: #d0c2e1;
+  text-align: center;
+  font-size: 1.6rem;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: #ab9ac0;
+  margin-bottom: 0.3rem;
+}
+
+input,
+textarea {
+  width: 100%;
+  font: inherit;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #ab9ac0;
+  background-color: #d0c2e1;
+  margin-bottom: 1rem;
+  box-sizing: border-box;
+}
+
+.actions {
+  margin: 1.5rem 0 0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+button[type="button"] {
+  background-color: transparent;
+  color: #bdadcf;
+}
+
+button[type="button"]:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #d0c2e1;
+}
+
+button[type="submit"] {
+  background-color: #9c73ca;
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+button[type="submit"]:hover {
+  background-color: #895cce;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 @media (min-width: 768px) {

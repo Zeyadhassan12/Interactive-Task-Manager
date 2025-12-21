@@ -10,6 +10,7 @@ export class TasksService{
           title: 'Master Angular',
           summary: 'Learn all the basic and advanced features of Angular & how to apply them.',
           dueDate: '2025-12-31',
+          completed: false,
         },
         {
           id: 't2',
@@ -17,6 +18,7 @@ export class TasksService{
           title: 'Build first prototype',
           summary: 'Build a first prototype of the online shop website',
           dueDate: '2024-05-31',
+          completed: false,
         },
         {
           id: 't3',
@@ -24,6 +26,7 @@ export class TasksService{
           title: 'Prepare issue template',
           summary: 'Prepare and describe an issue template which will help with project management',
           dueDate: '2024-06-15',
+          completed: false,
         },
     ];
 
@@ -41,18 +44,49 @@ export class TasksService{
 
     addTask(taskData: NewTaskData, userId: string){
         this.tasks.push({
-            id: new Date().getTime.toString(),
+            // id: new Date().getTime.toString(),
+            id: crypto.randomUUID(),
             userId: userId,
             title: taskData.title,
             summary: taskData.summary,
             dueDate: taskData.date,
+            completed: false,
         })
+        this.saveTasks();
 
     }
+
+    toggleTaskCompletion(id: string){
+        this.tasks = this.tasks.map((task) => {
+            if(task.id === id){
+                return {
+                    ...task,
+                    completed: !task.completed,
+                };
+            }
+            return task;
+        });
+        this.saveTasks();
+    }
+
 
     removeTask(id: string){
         this.tasks = this.tasks.filter((task)=>task.id !==id);
         this.saveTasks;
+    }
+
+    updateTask(id: string, updatedData: {title:string; summary:string; date:string}){
+        this.tasks = this.tasks.map((task) =>
+            task.id === id ? {
+                ...task,
+                title: updatedData.title,
+                summary: updatedData.summary,
+                date: updatedData.date,
+            }
+        : task
+            
+        );
+        this.saveTasks();
     }
 
     private saveTasks(){
