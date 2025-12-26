@@ -22,9 +22,10 @@ export class TaskComponent {
     this.tasksService.toggleTaskCompletion(this.task.id);
   }
 
-  onDeleteTask(){
-    this.tasksService.removeTask(this.task.id);
-  }
+  onDeleteTask() {
+  this.tasksService.removeTask(this.task.id).subscribe({
+  });
+}
 
   onEditTask() {
     this.edit.emit(this.task);

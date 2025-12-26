@@ -5,8 +5,8 @@ import { NewTaskComponent } from './new-task/new-task.component';
 import { Task } from './task/task.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Observable, combineLatest, BehaviorSubject } from 'rxjs';
-import { map } from 'rxjs';
+import { Observable, combineLatest, BehaviorSubject,map } from 'rxjs';
+
 
 @Component({
   selector: 'app-tasks',
@@ -70,6 +70,7 @@ export class TasksComponent implements OnChanges {
     this.isAddingTask = false;
     this.selectedTaskForEdit = undefined;
   }
+
 }
 
 
