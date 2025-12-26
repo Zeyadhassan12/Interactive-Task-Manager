@@ -1,59 +1,75 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit, OnChanges } from '@angular/core';
 import { TasksService } from './tasks.service';
 import { TaskComponent } from './task/task.component';
 import { NewTaskComponent } from './new-task/new-task.component';
-import { FormsModule } from '@angular/forms';
 import { Task } from './task/task.model';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Observable, combineLatest, BehaviorSubject } from 'rxjs';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-tasks',
-  imports: [TaskComponent, NewTaskComponent, FormsModule],
   standalone: true,
+  imports: [CommonModule, TaskComponent, NewTaskComponent, FormsModule],
   templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.css',
 })
-export class TasksComponent {
-  @Input({required:true}) name!:string;
-  @Input({required:true}) userId!:string;
-
-  constructor(private tasksService: TasksService){}
+export class TasksComponent implements OnChanges {
+  @Input({ required: true }) name!: string;
+  @Input({ required: true }) userId!: string;
 
   isAddingTask = false;
-  filter: 'all' | 'pending' | 'completed' = 'all';
-  // ← ADD THIS PROPERTY
   selectedTaskForEdit: Task | undefined = undefined;
 
-  get filteredTasks(){
-    const tasks = this.tasksService.getUserTasks(this.userId);
-    if(this.filter === 'completed'){
-      return tasks.filter(t => t.completed);
-    }
-    if(this.filter === 'pending'){
-      return tasks.filter(t => !t.completed);
-    }
-    return tasks;
+  private filterSubject = new BehaviorSubject<'all' | 'pending' | 'completed'>('all');
+  filter$ = this.filterSubject.asObservable();
 
+  
+  set filter(value: 'all' | 'pending' | 'completed') {
+    this.filterSubject.next(value);
   }
 
-
-  get selectedUserTasks(){
-    return this.tasksService.getUserTasks(this.userId);
+  get filter(): 'all' | 'pending' | 'completed' {
+    return this.filterSubject.value;
   }
 
-  onStartAddTask(){
+  userTasks$!: Observable<Task[]>;
+  filteredTasks$!: Observable<Task[]>;
+  activeCount$!: Observable<number>;
+
+  constructor(private tasksService: TasksService) {}
+
+  ngOnChanges() {
+    this.userTasks$ = this.tasksService.getUserTasks$(this.userId);
+
+    this.filteredTasks$ = combineLatest([this.userTasks$, this.filter$]).pipe(
+      map(([tasks, filter]) => {
+        if (filter === 'completed') return tasks.filter(t => t.completed);
+        if (filter === 'pending') return tasks.filter(t => !t.completed);
+        return tasks;
+      })
+    );
+
+    this.activeCount$ = this.userTasks$.pipe(
+      map(tasks => tasks.filter(t => !t.completed).length)
+    );
+  }
+
+  onStartAddTask() {
     this.isAddingTask = true;
     this.selectedTaskForEdit = undefined;
   }
 
-  // ← ADD THIS METHOD
   onEditTask(task: Task) {
     this.selectedTaskForEdit = task;
     this.isAddingTask = true;
   }
 
-  onCloseAddTask(){
+  onCloseAddTask() {
     this.isAddingTask = false;
     this.selectedTaskForEdit = undefined;
   }
-
 }
+
+

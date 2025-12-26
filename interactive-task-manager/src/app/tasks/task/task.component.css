@@ -1,11 +1,11 @@
-/* Main card article styling */
+
 article {
-  position: relative;              /* Essential for absolute positioning of .status */
+  position: relative;              
   padding: 1.5rem;
   color: #25113d;
   background-color: #bf9ee5;
-  border-radius: 8px;              /* Optional: nicer look */
-  min-height: 140px;               /* Prevents layout shift when toggling */
+  border-radius: 8px;              
+  min-height: 140px;               
   display: flex;
   flex-direction: column;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -28,7 +28,7 @@ p {
   line-height: 1.5;
 }
 
-/* Status circle - top right corner */
+
 .status {
   position: absolute;
   top: 12px;
@@ -58,16 +58,16 @@ p {
   transform: translate(-50%, -50%);
 }
 
-/* Actions container - buttons at the bottom */
+
 .actions {
-  margin-top: auto;                /* Pushes buttons to bottom of card */
+  margin-top: auto;                
   display: flex;
   gap: 0.75rem;
   flex-wrap: wrap;
-  justify-content: flex-end;       /* Aligns buttons to the right */
+  justify-content: flex-end;       
 }
 
-/* Complete button */
+
 .complete-btn {
   padding: 0.5rem 1.2rem;
   border: none;
@@ -93,7 +93,7 @@ p {
   background-color: #218838;
 }
 
-/* Delete button - matches your original purple theme */
+
 .delete-btn {
   padding: 0.5rem 1.2rem;
   border: none;

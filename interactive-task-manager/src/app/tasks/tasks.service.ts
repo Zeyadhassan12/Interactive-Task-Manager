@@ -1,95 +1,93 @@
-import { Injectable } from "@angular/core";
-import { type NewTaskData } from "./new-task/new-task.model";
+import { Injectable, NgZone } from '@angular/core';  
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, tap, map } from 'rxjs';
+import { Task } from './task/task.model';
+import { NewTaskData } from './new-task/new-task.model';
 
-@Injectable({providedIn:'root'})
-export class TasksService{
-    private tasks = [
-        {
-          id: 't1',
-          userId: 'u1',
-          title: 'Master Angular',
-          summary: 'Learn all the basic and advanced features of Angular & how to apply them.',
-          dueDate: '2025-12-31',
-          completed: false,
-        },
-        {
-          id: 't2',
-          userId: 'u3',
-          title: 'Build first prototype',
-          summary: 'Build a first prototype of the online shop website',
-          dueDate: '2024-05-31',
-          completed: false,
-        },
-        {
-          id: 't3',
-          userId: 'u3',
-          title: 'Prepare issue template',
-          summary: 'Prepare and describe an issue template which will help with project management',
-          dueDate: '2024-06-15',
-          completed: false,
-        },
-    ];
+interface UpdateTaskData {
+  title?: string;
+  summary?: string;
+  dueDate?: string;
+  completed?: boolean;
+}
 
-    constructor(){
-        const tasks = localStorage.getItem('tasks');
-        if(tasks){
-            this.tasks = JSON.parse(tasks);
-        }
-    }
+@Injectable({ providedIn: 'root' })
+export class TasksService {
+  private apiUrl = 'http://localhost:3000/tasks';  
 
+  private tasksSubject = new BehaviorSubject<Task[]>([]);
+  tasks$ = this.tasksSubject.asObservable();
 
-    getUserTasks(userId: string){
-        return this.tasks.filter((task) => task.userId === userId);
-    }
+  constructor(private http: HttpClient, private ngZone: NgZone) {  
+    this.loadTasks();
+  }
 
-    addTask(taskData: NewTaskData, userId: string){
-        this.tasks.push({
-            // id: new Date().getTime.toString(),
-            id: crypto.randomUUID(),
-            userId: userId,
-            title: taskData.title,
-            summary: taskData.summary,
-            dueDate: taskData.date,
-            completed: false,
-        })
-        this.saveTasks();
-
-    }
-
-    toggleTaskCompletion(id: string){
-        this.tasks = this.tasks.map((task) => {
-            if(task.id === id){
-                return {
-                    ...task,
-                    completed: !task.completed,
-                };
-            }
-            return task;
+  private loadTasks() {
+    this.http.get<Task[]>(this.apiUrl).pipe(
+      tap(tasks => {
+        this.ngZone.run(() => { 
+          this.tasksSubject.next(tasks);
         });
-        this.saveTasks();
-    }
+      })
+    ).subscribe();
+  }
 
+  getUserTasks$(userId: string) {
+    return this.tasks$.pipe(
+      map(tasks => tasks.filter(task => task.userId === userId))
+    );
+  }
 
-    removeTask(id: string){
-        this.tasks = this.tasks.filter((task)=>task.id !==id);
-        this.saveTasks;
-    }
+  addTask(taskData: NewTaskData, userId: string) {
+    const newTask: Task = {
+      id: crypto.randomUUID(),
+      userId,
+      title: taskData.title,
+      summary: taskData.summary,
+      dueDate: taskData.date,
+      completed: false,
+    };
 
-    updateTask(id: string, updatedData: {title:string; summary:string; date:string}){
-        this.tasks = this.tasks.map((task) =>
-            task.id === id ? {
-                ...task,
-                title: updatedData.title,
-                summary: updatedData.summary,
-                date: updatedData.date,
-            }
-        : task
-            
-        );
-        this.saveTasks();
-    }
+    return this.http.post<Task>(this.apiUrl, newTask).pipe(
+      tap(task => {
+        this.ngZone.run(() => {  
+          const current = this.tasksSubject.value;
+          this.tasksSubject.next([...current, task]);
+        });
+      })
+    );
+  }
 
-    private saveTasks(){
-        localStorage.setItem('tasks', JSON.stringify(this.tasks));
+  updateTask(id: string, updatedData: Partial<UpdateTaskData>) {
+    return this.http.patch<Task>(`${this.apiUrl}/${id}`, updatedData).pipe(
+      tap(updatedTask => {
+        this.ngZone.run(() => {  // ← FORCE UI update
+          const current = this.tasksSubject.value;
+          const index = current.findIndex(t => t.id === id);
+          if (index !== -1) {
+            current[index] = updatedTask;
+            this.tasksSubject.next([...current]);
+          }
+        });
+      })
+    );
+  }
+
+  toggleTaskCompletion(id: string) {
+    const task = this.tasksSubject.value.find(t => t.id === id);
+    if (task) {
+      this.updateTask(id, { completed: !task.completed }).subscribe();
     }
+  }
+
+  removeTask(id: string) {
+    return this.http.delete(`${this.apiUrl}/${id}`).pipe(
+      tap(() => {
+        this.ngZone.run(() => {  
+          const current = this.tasksSubject.value;
+          this.tasksSubject.next(current.filter(t => t.id !== id));
+        });
+      })
+    );
+  }
 }

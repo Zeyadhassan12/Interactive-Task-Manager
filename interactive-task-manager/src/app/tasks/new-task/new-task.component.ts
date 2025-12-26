@@ -12,7 +12,7 @@ import { Task } from '../task/task.model';
 })
 export class NewTaskComponent implements OnChanges {
   @Input({required:true}) userId!:string; 
-  @Input() task?: Task;  // ← NEW: Optional task for editing
+  @Input() task?: Task;  
   @Output() close = new EventEmitter<void>();
 
   enteredTitle= '';
@@ -22,7 +22,7 @@ export class NewTaskComponent implements OnChanges {
   private tasksService = inject(TasksService);
 
 
-  // When editing, pre-fill the form
+  // When editing
   ngOnChanges(changes: SimpleChanges) {
     if (changes['task'] && this.task) {
       this.enteredTitle = this.task.title;
@@ -34,16 +34,7 @@ export class NewTaskComponent implements OnChanges {
   onCancel(){
     this.close.emit();
   }
-  // onSubmit(){
-  //   this.tasksService.addTask({
-  //     title: this.enteredTitle,
-  //     summary: this.enteredSummary,
-  //     date: this.enteredDate
-  //   },
-  //   this.userId
-  //   );
-  //   this.close.emit();
-  // }
+
 
   onSubmit() {
     if (this.task) {
@@ -51,8 +42,8 @@ export class NewTaskComponent implements OnChanges {
       this.tasksService.updateTask(this.task.id, {
         title: this.enteredTitle,
         summary: this.enteredSummary,
-        date: this.enteredDate,
-      });
+        dueDate: this.enteredDate,
+      }).subscribe();
     } else {
       // Adding new task
       this.tasksService.addTask(
@@ -62,7 +53,7 @@ export class NewTaskComponent implements OnChanges {
           date: this.enteredDate,
         },
         this.userId
-      );
+      ).subscribe();
     }
     this.close.emit();
   }

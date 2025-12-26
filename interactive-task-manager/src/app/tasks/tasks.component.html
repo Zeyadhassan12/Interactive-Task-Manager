@@ -1,26 +1,32 @@
-@if(isAddingTask){
-    <app-new-task [userId] = "userId" [task] = "selectedTaskForEdit" (close)="onCloseAddTask()"/>
+@if(isAddingTask) {
+  <app-new-task 
+    [userId]="userId" 
+    [task]="selectedTaskForEdit"
+    (close)="onCloseAddTask()" />
 }
 
 <section id="tasks">
-    <header>
-        <h2>{{ name }} 's Tasks</h2>
-        <menu>
-            <button (click)="onStartAddTask()">Add Task</button>
-        </menu>
-        <select [(ngModel)]="filter">
-            <option value="all">All</option>
-            <option value="pending">Pending</option>
-            <option value="completed">Completed</option>
-        </select>
-    </header>
+  <header>
+    <h2>{{ name }}'s Tasks</h2>
+    <div class="controls">
+      <button (click)="onStartAddTask()">Add Task</button>
+      <select [(ngModel)]="filter">
+        <option value="all">All</option>
+        <option value="pending">Pending</option>
+        <option value="completed">Completed</option>
+      </select>
+    </div>
+  </header>
 
-    <ul>
-        @for (task of filteredTasks; track task.id + '_' + $index){
-            <li>
-                <app-task [task]="task"
-                (edit)="onEditTask($event)"/>
-            </li>
-        }
-    </ul>
+  <p class="active-count">
+    <strong>{{ (activeCount$ | async) }}</strong> active task{{ (activeCount$ | async) === 1 ? '' : 's' }} left
+  </p>
+
+  <ul>
+    @for (task of filteredTasks$ | async; track task.id) {
+      <li>
+        <app-task [task]="task" (edit)="onEditTask($event)" />
+      </li>
+    }
+  </ul>
 </section>

@@ -15,14 +15,8 @@ import { CardComponent } from "../../shared/card/card.component";
 })
 export class TaskComponent {
   @Input({required:true}) task!: Task;
-  @Output() edit = new EventEmitter<Task>();  // ← NEW
+  @Output() edit = new EventEmitter<Task>();  
   private tasksService = inject(TasksService);
-
-  // onCompleteTask(){
-  //   this.tasksService.removeTask(this.task.id);
-  // }
-
-
 
   onToggleComplete(){
     this.tasksService.toggleTaskCompletion(this.task.id);
