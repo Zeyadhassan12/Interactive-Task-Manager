@@ -38,7 +38,7 @@ Mark tasks as completed with visual status indicator (green circle + checkmark)
 
     ```Bash
         git clone https://github.com/Zeyadhassan12/Interactive-Task-Manager.git
-2. Navigate to the interactive-task-manager directory and install the requirements :
+2. Navigate to the interactive-task-manager directory :
 
     ```bash
         cd interactive-task-manager
