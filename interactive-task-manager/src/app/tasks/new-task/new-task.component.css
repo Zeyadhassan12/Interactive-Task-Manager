@@ -95,4 +95,12 @@ button[type="submit"]:hover {
   dialog {
     padding: 2rem;
   }
+} 
+
+.error {
+  display: block;          
+  color: #ff6b6b;
+  font-size: 0.85rem;
+  margin-top: 0.3rem;
 }
+
