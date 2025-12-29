@@ -1,36 +1,26 @@
 {
   "tasks": [
     {
+      "id": "t1",
+      "userId": "u1",
+      "title": "Master Angular",
+      "summary": "Learn all the basic and advanced features of Angular & how to apply them.",
+      "dueDate": "2025-12-31",
+      "completed": false
+    },
+    {
       "id": "t2",
       "userId": "u3",
       "title": "Build first prototype",
       "summary": "Build a first prototype of the online shop website",
-      "dueDate": "2024-05-31",
-      "completed": false
+      "dueDate": "2024-05-31"
     },
     {
       "id": "t3",
       "userId": "u3",
       "title": "Prepare issue template",
       "summary": "Prepare and describe an issue template which will help with project management",
-      "dueDate": "2024-06-15",
-      "completed": false
-    },
-    {
-      "id": "4910e091-b41a-4c8d-bc14-4248d92f9faa",
-      "userId": "u1",
-      "title": "ddd",
-      "summary": "ddd",
-      "dueDate": "2025-12-25",
-      "completed": true
-    },
-    {
-      "id": "b89752cb-eff1-45dd-af8b-fbc35c8d746f",
-      "userId": "u1",
-      "title": "hiioi",
-      "summary": "shjsbhjjs",
-      "dueDate": "2025-12-16",
-      "completed": false
+      "dueDate": "2024-06-15"
     }
   ]
 }

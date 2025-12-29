@@ -3,7 +3,7 @@ import { TasksService } from '../tasks.service';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Task } from '../task/task.model';
 import { CommonModule } from '@angular/common';
-import { Title } from '@angular/platform-browser';
+
 @Component({
   selector: 'app-new-task',
   imports: [ CommonModule, ReactiveFormsModule ],
